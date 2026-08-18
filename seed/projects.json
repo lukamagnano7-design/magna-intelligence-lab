@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "distributor-lab",
+    "name": "Distributor Lab / Distributor OS (La Gene Argentina)",
+    "description": "Distribuidora mayorista real, +$200M/mes, 90-110 pedidos/dia, 5 repartos, +20 empleados. Segundo laboratorio. Objetivo: que Guille opere con nuestro sistema en diciembre 2026.",
+    "stack": {"sistema_actual": "Distribuir Naranja 10.3.32 Build 478", "motor": "Progress OpenEdge sobre Linux", "acceso": "terminal VT 192.168.0.252:22", "nuestro": "C:\\dev\\magna-pedidos-lagene (Node, localhost:4950)"},
+    "constraints": {"deadline": "2026-12", "no_reemplazar": "el facturador del cliente: factura y cumple ARCA", "disciplina": "construir el mecanismo general, configurar lo especifico"},
+    "status": "active"
+  },
+  {
+    "slug": "freddy-lab",
+    "name": "Freddy Lab / Magna PyME OS",
+    "description": "Fiambreria minorista real, ~$30M/mes. Primer laboratorio. App en produccion, cargas en ~15 min. NO es prioridad (decision Luka 16/08/2026).",
+    "stack": {"app": "C:\\dev\\magna-pyme-os", "db": "SQLite magna.db", "runtime": "Node 24", "gobierno": "freddy-agent-os (7 agentes, 19 rules, 58 known errors)", "memoria": "Graphify - 160 nodos / 44 comunidades"},
+    "constraints": {"no_tocar": "meses cerrados; julio no se toca", "gate": "arneses 10/10 antes de entregar"},
+    "status": "maintenance"
+  },
+  {
+    "slug": "magna-os-familiar",
+    "name": "Magna OS Familiar",
+    "description": "App privada de finanzas, patrimonio, propiedades, autos y organizacion. En uso real y funcionando bien. Le falta la capa de inteligencia para toma de decisiones.",
+    "stack": {"path": "C:\\Users\\lukam\\MagnaOS-Familiar\\magna-app", "framework": "Next.js + TypeScript", "db": "Supabase", "deploy": "Vercel"},
+    "constraints": {"regla": "no reemplazar decisiones existentes sin entender por que se tomaron"},
+    "status": "active"
+  },
+  {
+    "slug": "claude-code-workflow",
+    "name": "Workflow propio (Claude Code + VS Code)",
+    "description": "La forma de trabajar en si. Skills, agentes, memoria, hooks, orquestacion. Todo lo que acelera la construccion de los demas proyectos.",
+    "stack": {"ide": "VS Code", "agente": "Claude Code", "memoria": "freddy-agent-os/memory + Graphify", "sandbox": "C:\\AI-SANDBOX"},
+    "constraints": {"ley": "ningun agente toca produccion por si solo (AGENTS.md seccion 12)"},
+    "status": "active"
+  },
+  {
+    "slug": "real-estate",
+    "name": "Real Estate Lab",
+    "description": "Negocio inmobiliario propio. Pendiente de relevar - todavia sin problemas cargados.",
+    "stack": {},
+    "constraints": {},
+    "status": "backlog"
+  },
+  {
+    "slug": "agencia-autos",
+    "name": "Agencia de Autos",
+    "description": "Agencia de autos propia. Pendiente de relevar - todavia sin problemas cargados.",
+    "stack": {},
+    "constraints": {},
+    "status": "backlog"
+  }
+]

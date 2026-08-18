@@ -1,0 +1,7 @@
+lab.db
+lab.db-shm
+lab.db-wal
+node_modules/
+.env
+experiments/*/
+!experiments/.gitkeep
