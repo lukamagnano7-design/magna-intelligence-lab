@@ -62,9 +62,31 @@ for (const p of read('problems.json')) {
                 JSON.stringify(p.tags ?? []));
 }
 
+// --- fuentes ---
+// Las claves que empiezan con "_" son comentarios y ejemplos del seed: se ignoran.
+const upSource = db.prepare(`
+  INSERT INTO sources (platform, source_type, handle, url, priority, active, metadata)
+  VALUES (?, ?, ?, ?, ?, ?, ?)
+  ON CONFLICT(platform, handle) DO UPDATE SET
+    source_type=excluded.source_type, url=excluded.url,
+    priority=excluded.priority, active=excluded.active, metadata=excluded.metadata
+`);
+for (const s of read('sources.json')) {
+  for (const [k, v] of Object.entries(s)) {
+    if (k.startsWith('_')) continue;
+    const src = typeof v === 'object' ? v : s;
+    if (!src.platform || !src.handle) continue;
+    upSource.run(src.platform, src.source_type ?? 'creator', src.handle, src.url ?? null,
+                 src.priority ?? 5, src.active === false ? 0 : 1,
+                 JSON.stringify({ notas: src.notas ?? null }));
+    if (typeof v !== 'object') break;
+  }
+}
+
 const n = (q) => db.prepare(q).get().n;
 console.log(`\nproyectos : ${n('SELECT count(*) n FROM projects')}`);
 console.log(`problemas : ${n('SELECT count(*) n FROM problems')}`);
+console.log(`fuentes   : ${n('SELECT count(*) n FROM sources')}`);
 console.log(`\n${sinValorar} problemas sin severity/economic_impact.`);
 console.log('Eso es correcto: se valoran CON Guille, no por nuestra cuenta.');
 console.log(`\nlab.db -> ${DB_PATH}`);

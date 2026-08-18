@@ -1,0 +1,35 @@
+[
+  {
+    "_comentario": "PEGA TUS FUENTES ACA. Alcanza con la URL: el handle, el channel_id y el RSS los resuelvo yo. Podes poner las que quieras, no hay limite. Ver docs/FUENTES.md para que se puede ingerir de cada plataforma.",
+    "_ejemplo_github_creador": {
+      "platform": "github", "source_type": "creator",
+      "handle": "anthropics", "url": "https://github.com/anthropics",
+      "priority": 8, "active": true,
+      "notas": "vigila TODOS los repos publicos del creador"
+    },
+    "_ejemplo_github_repo": {
+      "platform": "github", "source_type": "repo",
+      "handle": "owner/nombre-del-repo", "url": "https://github.com/owner/nombre-del-repo",
+      "priority": 9, "active": true,
+      "notas": "vigila un repo puntual: releases, commits, cambios de README"
+    },
+    "_ejemplo_youtube": {
+      "platform": "youtube", "source_type": "channel",
+      "handle": "@nombredelcanal", "url": "https://www.youtube.com/@nombredelcanal",
+      "priority": 7, "active": true,
+      "notas": "entra por RSS publico del canal, sin API key"
+    },
+    "_ejemplo_podcast": {
+      "platform": "podcast", "source_type": "show",
+      "handle": "nombre-del-podcast", "url": "https://open.spotify.com/show/XXXX",
+      "priority": 6, "active": true,
+      "notas": "pega el link de Spotify igual: yo busco el RSS publico del programa"
+    },
+    "_ejemplo_instagram": {
+      "platform": "instagram", "source_type": "creator",
+      "handle": "@nombredelcreador", "url": "https://www.instagram.com/nombredelcreador/",
+      "priority": 10, "active": false,
+      "notas": "cargalos igual desde ahora. active=false hasta la Fase 4; queda el registro"
+    }
+  }
+]
