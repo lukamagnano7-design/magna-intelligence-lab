@@ -1,35 +1,148 @@
 [
   {
-    "_comentario": "PEGA TUS FUENTES ACA. Alcanza con la URL: el handle, el channel_id y el RSS los resuelvo yo. Podes poner las que quieras, no hay limite. Ver docs/FUENTES.md para que se puede ingerir de cada plataforma.",
-    "_ejemplo_github_creador": {
-      "platform": "github", "source_type": "creator",
-      "handle": "anthropics", "url": "https://github.com/anthropics",
-      "priority": 8, "active": true,
-      "notas": "vigila TODOS los repos publicos del creador"
-    },
-    "_ejemplo_github_repo": {
-      "platform": "github", "source_type": "repo",
-      "handle": "owner/nombre-del-repo", "url": "https://github.com/owner/nombre-del-repo",
-      "priority": 9, "active": true,
-      "notas": "vigila un repo puntual: releases, commits, cambios de README"
-    },
-    "_ejemplo_youtube": {
-      "platform": "youtube", "source_type": "channel",
-      "handle": "@nombredelcanal", "url": "https://www.youtube.com/@nombredelcanal",
-      "priority": 7, "active": true,
-      "notas": "entra por RSS publico del canal, sin API key"
-    },
-    "_ejemplo_podcast": {
-      "platform": "podcast", "source_type": "show",
-      "handle": "nombre-del-podcast", "url": "https://open.spotify.com/show/XXXX",
-      "priority": 6, "active": true,
-      "notas": "pega el link de Spotify igual: yo busco el RSS publico del programa"
-    },
-    "_ejemplo_instagram": {
-      "platform": "instagram", "source_type": "creator",
-      "handle": "@nombredelcreador", "url": "https://www.instagram.com/nombredelcreador/",
-      "priority": 10, "active": false,
-      "notas": "cargalos igual desde ahora. active=false hasta la Fase 4; queda el registro"
-    }
+    "_nota": "Fuentes que consume Luka hoy (cargadas 18/08/2026). Son SU punto de partida, no una lista curada: 'lo que yo consumo y lo que yo encontre, no significa que sea lo mejor'. La curaduria por criterios es trabajo del Lab - ver docs/CURADURIA_FUENTES.md.",
+    "_ojo": "juanpe.divisual y bencorde/bencord aparecen en IG y en YouTube: es la misma persona en dos plataformas. Cuando exista la tabla de creadores hay que unificarlos para no contar dos veces la misma senial."
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "juanpablo.rosso",
+    "url": "https://www.instagram.com/juanpablo.rosso",
+    "priority": 5,
+    "active": false,
+    "notas": "aportado por Luka. Inactiva hasta Fase 4 (Instagram no tiene API de terceros)."
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "juanpe.divisual",
+    "url": "https://www.instagram.com/juanpe.divisual",
+    "priority": 5,
+    "active": false,
+    "notas": "aportado por Luka. Tambien esta en YouTube: misma persona."
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "agustinbadt",
+    "url": "https://www.instagram.com/agustinbadt",
+    "priority": 5,
+    "active": false,
+    "notas": "aportado por Luka."
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "bencorde",
+    "url": "https://www.instagram.com/bencorde",
+    "priority": 5,
+    "active": false,
+    "notas": "aportado por Luka. Tambien esta en YouTube (@bencord): misma persona."
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "santia.oficial",
+    "url": "https://www.instagram.com/santia.oficial",
+    "priority": 5,
+    "active": false,
+    "notas": "aportado por Luka."
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "francisco.carosia",
+    "url": "https://www.instagram.com/francisco.carosia",
+    "priority": 5,
+    "active": false,
+    "notas": "aportado por Luka."
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "tomiibuschiazzo",
+    "url": "https://www.instagram.com/tomiibuschiazzo",
+    "priority": 5,
+    "active": false,
+    "notas": "aportado por Luka."
+  },
+  {
+    "platform": "youtube",
+    "source_type": "channel",
+    "handle": "@gentlemanprogramming",
+    "url": "https://youtube.com/@gentlemanprogramming",
+    "priority": 7,
+    "active": true,
+    "notas": "aportado por Luka. Nombrado en la charla con ChatGPT como ejemplo de creador que muestra skills de Claude Code.",
+    "channel_id": "UCbx_d228PdYwgB4Jz202SIQ",
+    "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbx_d228PdYwgB4Jz202SIQ",
+    "feed_status": "ok"
+  },
+  {
+    "platform": "youtube",
+    "source_type": "channel",
+    "handle": "@mouredev",
+    "url": "https://youtube.com/@mouredev",
+    "priority": 7,
+    "active": true,
+    "notas": "aportado por Luka.",
+    "channel_id": "UC_seWBB7USKanhHB4KbWXKw",
+    "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UC_seWBB7USKanhHB4KbWXKw",
+    "feed_status": "ok"
+  },
+  {
+    "platform": "youtube",
+    "source_type": "channel",
+    "handle": "@juanpe.divisual",
+    "url": "https://youtube.com/@juanpe.divisual",
+    "priority": 6,
+    "active": false,
+    "notas": "aportado por Luka. Mismo creador que el IG juanpe.divisual. CANAL VERIFICADO por canonical, pero su RSS devuelve 404 persistente. Inactiva hasta resolver.",
+    "channel_id": "UCh0yfHiqN7Rt0jKlOKYjYXA",
+    "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCh0yfHiqN7Rt0jKlOKYjYXA",
+    "feed_status": "feed_404"
+  },
+  {
+    "platform": "youtube",
+    "source_type": "channel",
+    "handle": "@bencord",
+    "url": "https://youtube.com/@bencord",
+    "priority": 6,
+    "active": true,
+    "notas": "aportado por Luka. Mismo creador que el IG bencorde.",
+    "channel_id": "UCpq8lHHliCS3oBt-gfL0bKQ",
+    "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCpq8lHHliCS3oBt-gfL0bKQ",
+    "feed_status": "ok"
+  },
+  {
+    "platform": "youtube",
+    "source_type": "channel",
+    "handle": "@diegovasquez_ai",
+    "url": "https://youtube.com/@diegovasquez_ai",
+    "priority": 6,
+    "active": true,
+    "notas": "aportado por Luka.",
+    "channel_id": "UCDLRV0Hsf0rgzMx5bWWgf7g",
+    "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCDLRV0Hsf0rgzMx5bWWgf7g",
+    "feed_status": "ok"
+  },
+  {
+    "platform": "podcast",
+    "source_type": "show",
+    "handle": "spotify:show:7kyKbKwrqgxr4trONfkqmH",
+    "url": "https://open.spotify.com/show/7kyKbKwrqgxr4trONfkqmH",
+    "priority": 6,
+    "active": true,
+    "notas": "aportado por Luka. Identificado 18/08. Pendiente: resolver el RSS publico del programa.",
+    "nombre": "Inteligencia Artificial para los Negocios"
+  },
+  {
+    "platform": "instagram",
+    "source_type": "creator",
+    "handle": "lukebuildsai",
+    "url": "https://www.instagram.com/lukebuildsai",
+    "priority": 8,
+    "active": false,
+    "notas": "aportado por Luka 18/08: es un crack. Inactiva hasta Fase 4."
   }
 ]
