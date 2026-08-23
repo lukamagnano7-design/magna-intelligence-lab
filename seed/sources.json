@@ -1,7 +1,8 @@
 [
   {
     "_nota": "Fuentes que consume Luka hoy (cargadas 18/08/2026). Son SU punto de partida, no una lista curada: 'lo que yo consumo y lo que yo encontre, no significa que sea lo mejor'. La curaduria por criterios es trabajo del Lab - ver docs/CURADURIA_FUENTES.md.",
-    "_ojo": "juanpe.divisual y bencorde/bencord aparecen en IG y en YouTube: es la misma persona en dos plataformas. Cuando exista la tabla de creadores hay que unificarlos para no contar dos veces la misma senial."
+    "_ojo": "juanpe.divisual y bencorde/bencord aparecen en IG y en YouTube: es la misma persona en dos plataformas. Cuando exista la tabla de creadores hay que unificarlos para no contar dos veces la misma senial.",
+    "_radares": "Dos radares (decision Luka 18/08): tecnico (skills/repos/agentes -> como construis) y negocio (pricing/ofertas/como se vende software a PyMEs -> como lo cobras). Se evaluan con los mismos 8 criterios pero cambia que evidencia vale. Ver docs/CURADURIA_FUENTES.md."
   },
   {
     "platform": "instagram",
@@ -10,7 +11,8 @@
     "url": "https://www.instagram.com/juanpablo.rosso",
     "priority": 5,
     "active": false,
-    "notas": "aportado por Luka. Inactiva hasta Fase 4 (Instagram no tiene API de terceros)."
+    "notas": "aportado por Luka. Inactiva hasta Fase 4 (Instagram no tiene API de terceros).",
+    "radar": "tecnico"
   },
   {
     "platform": "instagram",
@@ -19,7 +21,8 @@
     "url": "https://www.instagram.com/juanpe.divisual",
     "priority": 5,
     "active": false,
-    "notas": "aportado por Luka. Tambien esta en YouTube: misma persona."
+    "notas": "aportado por Luka. Tambien esta en YouTube: misma persona.",
+    "radar": "tecnico"
   },
   {
     "platform": "instagram",
@@ -28,7 +31,8 @@
     "url": "https://www.instagram.com/agustinbadt",
     "priority": 5,
     "active": false,
-    "notas": "aportado por Luka."
+    "notas": "aportado por Luka.",
+    "radar": "tecnico"
   },
   {
     "platform": "instagram",
@@ -37,7 +41,8 @@
     "url": "https://www.instagram.com/bencorde",
     "priority": 5,
     "active": false,
-    "notas": "aportado por Luka. Tambien esta en YouTube (@bencord): misma persona."
+    "notas": "aportado por Luka. Tambien esta en YouTube (@bencord): misma persona.",
+    "radar": "tecnico"
   },
   {
     "platform": "instagram",
@@ -46,7 +51,8 @@
     "url": "https://www.instagram.com/santia.oficial",
     "priority": 5,
     "active": false,
-    "notas": "aportado por Luka."
+    "notas": "aportado por Luka.",
+    "radar": "tecnico"
   },
   {
     "platform": "instagram",
@@ -55,7 +61,8 @@
     "url": "https://www.instagram.com/francisco.carosia",
     "priority": 5,
     "active": false,
-    "notas": "aportado por Luka."
+    "notas": "aportado por Luka.",
+    "radar": "tecnico"
   },
   {
     "platform": "instagram",
@@ -64,7 +71,8 @@
     "url": "https://www.instagram.com/tomiibuschiazzo",
     "priority": 5,
     "active": false,
-    "notas": "aportado por Luka."
+    "notas": "aportado por Luka.",
+    "radar": "tecnico"
   },
   {
     "platform": "youtube",
@@ -76,7 +84,8 @@
     "notas": "aportado por Luka. Nombrado en la charla con ChatGPT como ejemplo de creador que muestra skills de Claude Code.",
     "channel_id": "UCbx_d228PdYwgB4Jz202SIQ",
     "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCbx_d228PdYwgB4Jz202SIQ",
-    "feed_status": "ok"
+    "feed_status": "ok",
+    "radar": "tecnico"
   },
   {
     "platform": "youtube",
@@ -88,7 +97,8 @@
     "notas": "aportado por Luka.",
     "channel_id": "UC_seWBB7USKanhHB4KbWXKw",
     "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UC_seWBB7USKanhHB4KbWXKw",
-    "feed_status": "ok"
+    "feed_status": "ok",
+    "radar": "tecnico"
   },
   {
     "platform": "youtube",
@@ -100,7 +110,8 @@
     "notas": "aportado por Luka. Mismo creador que el IG juanpe.divisual. CANAL VERIFICADO por canonical, pero su RSS devuelve 404 persistente. Inactiva hasta resolver.",
     "channel_id": "UCh0yfHiqN7Rt0jKlOKYjYXA",
     "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCh0yfHiqN7Rt0jKlOKYjYXA",
-    "feed_status": "feed_404"
+    "feed_status": "feed_404",
+    "radar": "tecnico"
   },
   {
     "platform": "youtube",
@@ -112,7 +123,8 @@
     "notas": "aportado por Luka. Mismo creador que el IG bencorde.",
     "channel_id": "UCpq8lHHliCS3oBt-gfL0bKQ",
     "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCpq8lHHliCS3oBt-gfL0bKQ",
-    "feed_status": "ok"
+    "feed_status": "ok",
+    "radar": "tecnico"
   },
   {
     "platform": "youtube",
@@ -124,7 +136,8 @@
     "notas": "aportado por Luka.",
     "channel_id": "UCDLRV0Hsf0rgzMx5bWWgf7g",
     "rss": "https://www.youtube.com/feeds/videos.xml?channel_id=UCDLRV0Hsf0rgzMx5bWWgf7g",
-    "feed_status": "ok"
+    "feed_status": "ok",
+    "radar": "tecnico"
   },
   {
     "platform": "podcast",
@@ -134,7 +147,8 @@
     "priority": 6,
     "active": true,
     "notas": "aportado por Luka. Identificado 18/08. Pendiente: resolver el RSS publico del programa.",
-    "nombre": "Inteligencia Artificial para los Negocios"
+    "nombre": "Inteligencia Artificial para los Negocios",
+    "radar": "tecnico"
   },
   {
     "platform": "instagram",
@@ -143,6 +157,7 @@
     "url": "https://www.instagram.com/lukebuildsai",
     "priority": 8,
     "active": false,
-    "notas": "aportado por Luka 18/08: es un crack. Inactiva hasta Fase 4."
+    "notas": "aportado por Luka 18/08: es un crack. Inactiva hasta Fase 4.",
+    "radar": "tecnico"
   }
 ]

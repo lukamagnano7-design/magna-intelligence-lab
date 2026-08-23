@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "Sistema permanente de investigacion, experimentacion y memoria",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "init": "node scripts/init_db.js",
-    "problemas": "node scripts/problemas.js"
+    "problemas": "node scripts/problemas.js",
+    "recolectar": "node scripts/recolectar.js"
   }
 }

@@ -63,15 +63,73 @@ casi nadie la mira.
 Es el criterio que más le importa a Luka, porque es el suyo propio: la diferencia entre quien
 habla de negocios y quien tiene los números adentro.
 
+### 7. Aval del nicho — *aportado por Luka (18/08)*
+**Quién lo respalda, y no cuánta gente lo comenta.**
+
+Luka: *"hay mucho ignorante hoy en redes y mucha gente que quiere aprender, entonces comenta,
+y no se sabe si ese video realmente es bueno o no."*
+
+Lo que vale es el aval de **gente reconocida del nicho o de empresas con las que trabaja de
+verdad**. Y dio el dónde buscarlo: **las historias destacadas**, que es donde se muestran
+clientes y colaboraciones reales — no la caja de comentarios.
+
+### 8. Resultado verificado — *el más fuerte de los ocho*
+**¿Algo que salió de esta fuente terminó adoptado en un sistema real?**
+
+Luka: *"los que te pasé son personas que me han dado información donde hemos aplicado acá
+juntos y hemos priorizado gracias a eso."*
+
+Eso no es una impresión: es un hecho, y **el Lab lo cuenta solo**. La cadena
+`sources → items → technologies → decisions` ya está en el schema, así que se puede medir
+cuántas adopciones reales produjo cada fuente y subirle la prioridad automáticamente.
+
+**Es el único criterio que ninguna lista de "mejores creadores" de internet puede tener**,
+porque nadie más tiene las adopciones de Luka. Con el tiempo, es el que más debería pesar.
+
 ---
 
 ## Anti-señales (bajan la prioridad automáticamente)
 
+- ⛔ **La interacción usada como prueba de calidad.** Miles de comentarios miden cuánta gente
+  está aprendiendo, no cuánto sabe el que habla. Puede ser señal **inversa**: el contenido más
+  simplificado genera más engagement y suele ser el menos riguroso.
 - El producto principal es **un curso**, y la tecnología es el anzuelo
 - *"X va a reemplazar a Y"* como fórmula recurrente
-- Números de audiencia usados como argumento de autoridad
+- Números de seguidores usados como argumento de autoridad
 - **Nunca muestra lo que falló** — solo demos que salen bien a la primera
 - Recomienda herramientas de las que es afiliado sin declararlo
+
+---
+
+## Los dos radares
+
+No todas las fuentes se evalúan con la misma vara. El campo `sources.radar` las separa:
+
+| | **Radar técnico** | **Radar de negocio** |
+|---|---|---|
+| Qué trae | skills, repos, MCPs, agentes | pricing, ofertas, cómo se vende software a PyMEs |
+| Para qué sirve | **cómo construís** | **cómo lo cobrás** |
+| Constancia de práctica se mide por | commits públicos | empresas facturando |
+| Ejemplo | Gentleman Programming | Alex Hormozi |
+
+**A Hormozi no le pedís commits; a un dev no le pedís facturación.** Los criterios son los
+ocho para los dos radares — lo que cambia es la evidencia que cuenta como válida en el 1 y el 6.
+
+Los dos importan por la misma razón: en diciembre no alcanza con tener el sistema construido,
+hay que saber cobrarlo.
+
+---
+
+## El idioma no es criterio
+
+Luka: *"sé que el mundo inglés está muchísimo más avanzado, pero no me da el tiempo para
+ponerme a ver divulgadores en inglés, me cuesta el doble."*
+
+**Ese costo desaparece con el Lab**: transcribe, procesa y entrega la ficha en castellano.
+Luka solo llega al contenido cuando el veredicto dice que vale la pena.
+
+Consecuencia: las fuentes en inglés deberían pesar **más**, no menos. Van dos semanas
+adelantadas, y el criterio 4 (originalidad vs eco) justamente premia llegar antes.
 
 ---
 

@@ -44,13 +44,18 @@ CREATE TABLE IF NOT EXISTS problems (
   created_at      TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- Las fuentes que vigila el Tech Radar (creadores de GitHub, cuentas IG, canales...).
+-- Las fuentes que vigilan los radares (creadores de GitHub, cuentas IG, canales, podcasts...).
+-- Dos radares, porque no se evaluan igual (decision Luka 18/08):
+--   'tecnico' -> skills, repos, MCPs, agentes. Se le pide constancia de commits.
+--   'negocio' -> pricing, ofertas, como se vende software a PyMEs. Se le pide empresa real.
+-- A Hormozi no le pedis commits; a un dev no le pedis facturacion.
 CREATE TABLE IF NOT EXISTS sources (
   id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
   platform    TEXT NOT NULL,
   source_type TEXT NOT NULL,
   handle      TEXT,
   url         TEXT,
+  radar       TEXT NOT NULL DEFAULT 'tecnico' CHECK (radar IN ('tecnico','negocio','ambos')),
   priority    INTEGER NOT NULL DEFAULT 5,
   active      INTEGER NOT NULL DEFAULT 1,
   metadata    TEXT NOT NULL DEFAULT '{}',
