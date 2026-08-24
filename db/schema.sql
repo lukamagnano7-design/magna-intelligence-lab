@@ -80,6 +80,42 @@ CREATE TABLE IF NOT EXISTS items (
   created_at   TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+-- Las SENIALES crudas de un item. Un video tiene varias y ninguna manda sola.
+-- 'metadata' (titulo/descripcion/capitulos) · 'transcript' (audio) · 'frame_ocr' (pantalla).
+-- Existe como tabla propia porque el pipeline es multi-senial por diseno: el OCR es UNA
+-- herramienta, no la arquitectura (correccion de Luka, 24/08/2026).
+CREATE TABLE IF NOT EXISTS signals (
+  id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  item_id     TEXT NOT NULL REFERENCES items(id) ON DELETE CASCADE,
+  kind        TEXT NOT NULL CHECK (kind IN ('metadata','transcript','frame_ocr','caption','manual')),
+  content     TEXT NOT NULL,
+  extractor   TEXT NOT NULL,   -- que lo produjo, para poder auditar
+  metadata    TEXT NOT NULL DEFAULT '{}',
+  created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (item_id, kind, extractor)
+);
+
+-- ENTIDADES DETECTADAS, antes de resolverlas. Es una MENCION, no una verdad.
+-- Puede ser un repo, una skill, un MCP, un framework, una empresa, una persona o una tecnica.
+-- Se guarda de que senial salio y con que confianza: una URL visible vale mas que un nombre
+-- dicho al pasar, y eso tiene que quedar registrado.
+CREATE TABLE IF NOT EXISTS entities (
+  id             TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  item_id        TEXT NOT NULL REFERENCES items(id) ON DELETE CASCADE,
+  signal_id      TEXT REFERENCES signals(id) ON DELETE SET NULL,
+  raw_mention    TEXT NOT NULL,   -- tal cual aparecio
+  entity_type    TEXT NOT NULL CHECK (entity_type IN
+                 ('repository','skill','mcp','framework','tool','company','person','url','technique','unknown')),
+  normalized     TEXT,            -- nombre canonico, si se pudo normalizar
+  confidence     REAL NOT NULL CHECK (confidence BETWEEN 0 AND 1),
+  -- por que NO se resolvio, cuando no se resolvio. Un hueco explicado vale mas que uno mudo.
+  resolution_status TEXT NOT NULL DEFAULT 'pending'
+                    CHECK (resolution_status IN ('pending','resolved','unresolvable','discarded')),
+  discard_reason TEXT,            -- ej: link de afiliado, no es tecnologia
+  technology_id  TEXT REFERENCES technologies(id) ON DELETE SET NULL,
+  created_at     TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 -- La tecnologia ya verificada contra su FUENTE PRIMARIA, no contra el Reel.
 CREATE TABLE IF NOT EXISTS technologies (
   id                TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
@@ -172,6 +208,8 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   finished_at TEXT
 );
 
+CREATE INDEX IF NOT EXISTS idx_signals_item     ON signals(item_id, kind);
+CREATE INDEX IF NOT EXISTS idx_entities_item    ON entities(item_id, resolution_status);
 CREATE INDEX IF NOT EXISTS idx_problems_project ON problems(project_id, status);
 CREATE INDEX IF NOT EXISTS idx_items_status     ON items(status, created_at);
 CREATE INDEX IF NOT EXISTS idx_matches_project  ON matches(project_id, relevance_score DESC);

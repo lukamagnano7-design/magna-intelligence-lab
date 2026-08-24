@@ -9,6 +9,7 @@
   "scripts": {
     "init": "node scripts/init_db.js",
     "problemas": "node scripts/problemas.js",
-    "recolectar": "node scripts/recolectar.js"
+    "recolectar": "node scripts/recolectar.js",
+    "analizar": "node scripts/analizar.js"
   }
 }

@@ -1,0 +1,37 @@
+[
+  {
+    "_nota": "REGISTRO CURADO de fuentes primarias. Esto NO es adivinar: es conocimiento canonico versionado, igual que el VOCABULARIO de lib/entidades.js. Cuando una entidad se nombra sin URL (el caso tipico del video que retiene el link), este registro es lo unico que permite llegar a la fuente oficial sin inventarla.",
+    "_regla": "Toda URL de aca tiene que haber sido verificada con una peticion real antes de entrar. Las de abajo dieron HTTP 200 el 24/08/2026. Si una empieza a fallar, se corrige; no se deja podrir.",
+    "_como_crece": "Cuando el Lab encuentre una entidad repetida que no puede resolver, se agrega aca con su fuente verificada. El registro es el que hace que la segunda vez sea instantanea."
+  },
+
+  { "nombre": "Claude Skills", "alias": ["skills de Claude", "agent skills", "claude agent skills"],
+    "tipo": "skill", "repo": "anthropics/skills",
+    "oficial": "https://docs.claude.com/en/docs/agents-and-tools/agent-skills",
+    "verificado": "2026-08-24" },
+
+  { "nombre": "Claude Code", "alias": ["cloud code"],
+    "tipo": "tool", "repo": null,
+    "oficial": "https://docs.claude.com/en/docs/claude-code",
+    "verificado": "2026-08-24" },
+
+  { "nombre": "Stripe", "alias": [],
+    "tipo": "company", "repo": null,
+    "oficial": "https://docs.stripe.com",
+    "verificado": "2026-08-24" },
+
+  { "nombre": "Polar", "alias": ["polar.sh"],
+    "tipo": "company", "repo": "polarsource/polar",
+    "oficial": "https://polar.sh",
+    "verificado": "2026-08-24" },
+
+  { "nombre": "n8n", "alias": [],
+    "tipo": "tool", "repo": "n8n-io/n8n",
+    "oficial": "https://n8n.io",
+    "verificado": "2026-08-24" },
+
+  { "nombre": "Supabase", "alias": [],
+    "tipo": "framework", "repo": "supabase/supabase",
+    "oficial": "https://supabase.com/docs",
+    "verificado": "2026-08-24" }
+]
