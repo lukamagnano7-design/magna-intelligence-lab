@@ -100,6 +100,37 @@ CREATE TABLE IF NOT EXISTS signals (
   UNIQUE (item_id, kind, extractor)
 );
 
+-- FOTOGRAMAS analizados. Uno por frame que sobrevivio a la seleccion y la deduplicacion.
+-- El contrato deja lugar para observaciones de un modelo visual que todavia no tenemos:
+-- 'observations' y 'visual_entities' quedan vacios hasta que exista. No se inventan.
+CREATE TABLE IF NOT EXISTS frames (
+  id              TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  item_id         TEXT NOT NULL REFERENCES items(id) ON DELETE CASCADE,
+  ts_seconds      REAL NOT NULL,          -- momento exacto del video
+  phash           TEXT,                   -- huella perceptual, para deduplicar
+  ocr_text        TEXT,                   -- texto crudo leido en pantalla
+  ocr_confidence  REAL,
+  visual_entities TEXT NOT NULL DEFAULT '[]',  -- reservado para modelo visual
+  observations    TEXT NOT NULL DEFAULT '[]',  -- reservado para modelo visual
+  extractor       TEXT NOT NULL,
+  created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (item_id, ts_seconds)
+);
+
+-- PROVENANCE: de donde salio cada entidad. Nunca alcanza con "el Lab detecto X":
+-- hay que poder preguntar POR QUE y obtener evidencia con timestamp.
+-- Una entidad puede tener varias filas: transcript + OCR + metadata. Ahi esta la fusion.
+CREATE TABLE IF NOT EXISTS entity_evidence (
+  id          TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  entity_id   TEXT NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
+  signal_kind TEXT NOT NULL,   -- metadata · transcript · frame_ocr · visual
+  frame_id    TEXT REFERENCES frames(id) ON DELETE SET NULL,
+  ts_seconds  REAL,            -- cuando, si la senial es temporal
+  snippet     TEXT NOT NULL,   -- el fragmento exacto que la sostiene
+  confidence  REAL NOT NULL CHECK (confidence BETWEEN 0 AND 1),
+  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
 -- ENTIDADES DETECTADAS, antes de resolverlas. Es una MENCION, no una verdad.
 -- Puede ser un repo, una skill, un MCP, un framework, una empresa, una persona o una tecnica.
 -- Se guarda de que senial salio y con que confianza: una URL visible vale mas que un nombre
@@ -113,6 +144,10 @@ CREATE TABLE IF NOT EXISTS entities (
                  ('repository','skill','mcp','framework','tool','company','person','url','technique','unknown')),
   normalized     TEXT,            -- nombre canonico, si se pudo normalizar
   confidence     REAL NOT NULL CHECK (confidence BETWEEN 0 AND 1),
+  -- Escala nombrada, derivada de CUANTAS seniales independientes la sostienen.
+  -- VERY_HIGH exige convergencia: transcript + OCR, o una URL exacta confirmada.
+  confidence_label TEXT CHECK (confidence_label IN ('LOW','MEDIUM','HIGH','VERY_HIGH')),
+  signal_count   INTEGER NOT NULL DEFAULT 1,
   -- por que NO se resolvio, cuando no se resolvio. Un hueco explicado vale mas que uno mudo.
   resolution_status TEXT NOT NULL DEFAULT 'pending'
                     CHECK (resolution_status IN ('pending','resolved','unresolvable','discarded')),
@@ -249,6 +284,8 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   finished_at TEXT
 );
 
+CREATE INDEX IF NOT EXISTS idx_frames_item     ON frames(item_id, ts_seconds);
+CREATE INDEX IF NOT EXISTS idx_evidence_entity ON entity_evidence(entity_id);
 CREATE INDEX IF NOT EXISTS idx_signals_item     ON signals(item_id, kind);
 CREATE INDEX IF NOT EXISTS idx_entities_item    ON entities(item_id, resolution_status);
 CREATE INDEX IF NOT EXISTS idx_problems_project ON problems(project_id, status);

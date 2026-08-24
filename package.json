@@ -12,6 +12,6 @@
     "recolectar": "node scripts/recolectar.js",
     "analizar": "node scripts/analizar.js",
     "match": "node scripts/match.js",
-    "test": "node test/matcher.test.js"
+    "test": "node test/matcher.test.js && node test/vision.test.js"
   }
 }

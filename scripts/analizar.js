@@ -16,6 +16,7 @@ const conocimiento = require('../lib/conocimiento');
 const capacidades = require('../lib/capacidades');
 const matcher = require('../lib/matcher');
 const riesgo = require('../lib/riesgo');
+const vision = require('../lib/vision');
 const { puntuar, veredicto, CRITERIOS } = require('../lib/veredicto');
 
 const arg = process.argv[2];
@@ -45,19 +46,55 @@ const bloque = (t) => console.log(`\n── ${t} ${'─'.repeat(Math.max(0, 72 -
 
   // ---------------------------------------------------------------- 1. seniales
   bloque('1. SENIALES EXTRAIDAS');
-  const sen = extraerSenales(item);
+  const sen = extraerSenales(item, { solo: ['metadata', 'transcript'] });
   for (const g of sen.guardadas) console.log(`  ✓ ${g.kind.padEnd(12)} ${g.chars} chars`);
-  for (const s of sen.saltadas)  console.log(`  – ${s.kind.padEnd(12)} NO DISPONIBLE: ${s.motivo}`);
   for (const e of sen.errores)   console.log(`  ✗ ${e.kind.padEnd(12)} ERROR: ${e.error}`);
-  if (!sen.guardadas.length) console.log('  (ninguna senial: no se puede analizar)');
+
+  // Senial visual. Es ENRIQUECIMIENTO: si falla, se dice y el analisis sigue igual.
+  let vis = { ok: false, motivo: 'no solicitada', frames: [], metricas: {} };
+  if (!process.argv.includes('--sin-vision')) {
+    vis = vision.extraer(item);
+    if (vis.ok) {
+      vision.guardar(item.id, vis.frames);
+      const conTexto = vis.frames.filter(f => f.ocr_text).length;
+      console.log(`  ✓ frame_ocr    ${vis.frames.length} frames analizados (${conTexto} con texto)`);
+    } else {
+      console.log(`  – frame_ocr    ${vis.motivo}`);
+      console.log('                 (el analisis sigue con las otras seniales)');
+    }
+  } else console.log('  – frame_ocr    salteada por --sin-vision');
+
+  if (vis.ok) {
+    bloque('1b. ANALISIS VISUAL');
+    const m = vis.metricas;
+    console.log(`  Frames candidatos     : ${m.candidatos}`);
+    console.log(`  Descartados por dup   : ${m.descartados_redundantes}`);
+    console.log(`  Analizados            : ${vis.frames.length}`);
+    console.log(`  Sin texto legible     : ${m.ocr_vacios}`);
+    console.log(`  Tiempos (s)           : descarga ${(m.ms_descarga/1000).toFixed(1)} · frames ${(m.ms_frames/1000).toFixed(1)} · OCR ${(m.ms_ocr/1000).toFixed(1)} · total ${(m.ms_total/1000).toFixed(1)}`);
+    console.log(`  Disco temporal        : ${m.mb_disco} MB (se borra al terminar)`);
+    const utiles = vis.frames.filter(f => f.ocr_text && f.ocr_text.length > 40);
+    if (utiles.length) {
+      console.log('\n  Lo que se leyo en pantalla:');
+      for (const f of utiles.slice(0, 6))
+        console.log(`    [${String(f.ts_seconds).padStart(3)}s] ${f.ocr_text.replace(/\n/g, ' ').slice(0, 96)}`);
+    }
+  }
+  if (!sen.guardadas.length && !vis.ok) console.log('\n  (ninguna senial: no se puede analizar)');
 
   // ---------------------------------------------------------------- 2. entidades
   bloque('2. ENTIDADES DETECTADAS');
   const ents = extraerEntidades(item.id);
   for (const e of ents) {
-    const marca = e.estado === 'discarded' ? 'DESCARTADA' : `${(e.confidence * 100).toFixed(0)}%`;
-    console.log(`  ${marca.padStart(10)}  [${e.entity_type}] ${e.normalized || e.raw_mention}`);
-    if (e.descartar) console.log(`              ↳ ${e.descartar}`);
+    const marca = e.estado === 'discarded' ? 'DESCARTADA' : (e.confidence_label ?? '');
+    console.log(`  ${marca.padStart(11)}  [${e.entity_type}] ${e.normalized || e.raw_mention}`);
+    if (e.descartar) { console.log(`               ↳ ${e.descartar}`); continue; }
+    // PROVENANCE: nunca alcanza con "el Lab detecto X". Hay que poder preguntar POR QUE
+    // y obtener la evidencia exacta, con su timestamp.
+    for (const v of (e.evidencias ?? [])) {
+      const cuando = v.ts_seconds != null ? ` @${v.ts_seconds}s` : '';
+      console.log(`               <- ${v.signal_kind}${cuando}: "${v.snippet.slice(0, 66)}"`);
+    }
   }
   const vivas = ents.filter(e => e.estado !== 'discarded');
   console.log(`\n  ${vivas.length} entidades vivas · ${ents.length - vivas.length} descartadas`);
