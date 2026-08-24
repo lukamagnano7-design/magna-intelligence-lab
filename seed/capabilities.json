@@ -1,0 +1,56 @@
+[
+  {
+    "_nota": "TAXONOMIA MINIMA DE CAPACIDADES. Derivada el 24/08/2026 leyendo los problemas REALES ya cargados, no inventada de antemano. Cada entrada existe porque al menos un problema documentado la necesita.",
+    "_por_que_existe": "El match NO se hace por parecido de palabras. Eso seria el mismo bug que 'Polar' matcheando dentro de 'GRUPOLAR': coincidencia de letras sin relacion real. La capacidad es la capa semantica que hace explicito QUE necesita el problema y QUE ofrece la tecnologia.",
+    "_como_crece": "Cuando un problema nuevo necesite algo que no esta aca, se agrega CON el problema que lo justifica. Una capacidad sin ningun problema que la pida es ontologia prematura y no entra.",
+    "_regla": "Nunca agregar una capacidad para hacer que una tecnologia matchee. Eso es forzar el match al reves."
+  },
+
+  { "id": "document_generation", "nombre": "Generacion de documentos",
+    "descripcion": "Producir un PDF/impreso a partir de datos estructurados.",
+    "pedida_por": ["DIST-PED-001"] },
+
+  { "id": "messaging_integration", "nombre": "Integracion con mensajeria",
+    "descripcion": "Leer y responder mensajes de WhatsApp u otros canales de forma programatica.",
+    "pedida_por": ["DIST-PED-002"] },
+
+  { "id": "speech_to_text", "nombre": "Transcripcion de voz",
+    "descripcion": "Convertir audio (llamadas, notas de voz) en texto.",
+    "pedida_por": ["DIST-PED-002"] },
+
+  { "id": "natural_language_extraction", "nombre": "Extraccion de datos desde lenguaje natural",
+    "descripcion": "Convertir un texto libre en registros estructurados (ej: un pedido hablado en lineas de articulo).",
+    "pedida_por": ["DIST-PED-002"] },
+
+  { "id": "mobile_data_capture", "nombre": "Captura de datos en el lugar",
+    "descripcion": "Cargar datos donde ocurren, sin papel intermedio ni retipeo posterior.",
+    "pedida_por": ["DIST-OPS-003"] },
+
+  { "id": "document_extraction", "nombre": "Extraccion desde documentos e imagenes",
+    "descripcion": "Leer datos de una foto, un PDF o un papel escaneado (OCR y afines).",
+    "pedida_por": ["DIST-OPS-003"] },
+
+  { "id": "geocoding", "nombre": "Geocodificacion",
+    "descripcion": "Convertir una direccion en coordenadas utilizables.",
+    "pedida_por": ["DIST-LOG-005"] },
+
+  { "id": "dashboards_reporting", "nombre": "Tableros e informes",
+    "descripcion": "Mostrar los numeros que el dueno necesita ver, en el formato en que mide su negocio.",
+    "pedida_por": ["DIST-BI-008"] },
+
+  { "id": "legacy_data_extraction", "nombre": "Extraccion desde sistemas heredados",
+    "descripcion": "Sacar datos de un sistema cerrado o propietario (ej: un backup de Progress OpenEdge).",
+    "pedida_por": ["DIST-PRE-006"] },
+
+  { "id": "persistent_memory", "nombre": "Memoria persistente entre sesiones",
+    "descripcion": "Que el conocimiento sobreviva al fin de una sesion y este disponible en la siguiente.",
+    "pedida_por": ["WF-CTX-001"] },
+
+  { "id": "knowledge_retrieval", "nombre": "Recuperacion de conocimiento previo",
+    "descripcion": "Encontrar la regla o decision que ya existe ANTES de volver a resolver el problema.",
+    "pedida_por": ["WF-REG-002"] },
+
+  { "id": "agent_task_scoping", "nombre": "Acotar el alcance de una tarea de agente",
+    "descripcion": "Procedimientos empaquetados que mantienen a un agente dentro del alcance pedido.",
+    "pedida_por": ["WF-SCP-003"] }
+]

@@ -1,5 +1,11 @@
 [
   {
+    "_nota": "Problemas REALES, cada uno con su evidencia. Ninguno inventado.",
+    "_capacidades": "required_capabilities = sin esto no se resuelve. useful_capabilities = ayuda pero no es condicion. Ver seed/capabilities.json.",
+    "_insuficientes": "data_status='INSUFFICIENT_PROBLEM_DATA' marca los problemas que NO estan lo bastante documentados para matchear con confianza. El matcher los excluye a proposito. Es mejor un hueco declarado que un score fabricado — y ademas es la lista concreta de lo que hay que preguntarle al cliente."
+  },
+
+  {
     "code": "DIST-PED-001",
     "project": "distributor-lab",
     "category": "pedidos",
@@ -10,6 +16,9 @@
     "frequency": 10,
     "severity": null,
     "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": ["document_generation"],
+    "useful_capabilities": [],
     "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md (paso 2, verificado con Guille en vivo 15-16/08/2026)",
     "tags": ["circuito-4-pasos", "excel", "quick-win"]
   },
@@ -24,6 +33,9 @@
     "frequency": 10,
     "severity": null,
     "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": ["natural_language_extraction"],
+    "useful_capabilities": ["messaging_integration", "speech_to_text"],
     "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md (paso 1). Volumen: 90-110 pedidos/dia.",
     "tags": ["circuito-4-pasos", "whatsapp", "carga-manual", "candidato-ia"]
   },
@@ -38,6 +50,9 @@
     "frequency": 10,
     "severity": null,
     "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": ["mobile_data_capture"],
+    "useful_capabilities": ["document_extraction"],
     "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md (pasos 3 y 4). Foto del papel real en Downloads/FOTO PEDIDO.jpeg. 487 de 881 articulos (55%) requieren balanza.",
     "tags": ["circuito-4-pasos", "papel", "doble-carga"]
   },
@@ -46,12 +61,16 @@
     "project": "distributor-lab",
     "category": "logistica",
     "title": "El numero de reparto no existe como dato en el sistema",
-    "description": "Guille saca 5 repartos por dia y el numero de reparto lo lleva el cliente (los repartidores rotan, el numero queda). Pero Distribuir no tiene ese campo: el campo 'Esquema 1 Ruta de distribucion' guarda el DIA (LUNES a SABADO), no el reparto. 156 clientes estan en SIN ESPECIFICAR.",
+    "description": "Guille saca 5 repartos por dia y el numero de reparto lo lleva el cliente (los repartidores rotan, el numero queda). Pero Distribuir no tiene ese campo: 'Esquema 1 Ruta de distribucion' guarda el DIA, no el reparto. 156 clientes estan en SIN ESPECIFICAR.",
     "current_process": "conocimiento en la cabeza de Guille",
     "workaround": "memoria humana",
     "frequency": 10,
     "severity": null,
     "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": [],
+    "useful_capabilities": [],
+    "no_requiere_tecnologia": "Es un hueco de modelo de datos, no de tecnologia: se resuelve agregando el campo en nuestro sistema y cargandolo. Ninguna herramienta externa lo soluciona. Se deja con capacidades vacias A PROPOSITO, para que ninguna tecnologia matchee aca.",
     "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md, verificado contra el export de maestros (C:/Temp/gcirc/maestros.json).",
     "tags": ["hueco-del-sistema", "reparto", "datos-faltantes"]
   },
@@ -66,6 +85,9 @@
     "frequency": 10,
     "severity": null,
     "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": ["geocoding"],
+    "useful_capabilities": [],
     "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md, contado sobre el export de clientes (columnas Coord X/Y de entrega).",
     "tags": ["datos-faltantes", "geo", "precondicion-ruteo"]
   },
@@ -80,6 +102,10 @@
     "frequency": null,
     "severity": null,
     "economic_impact": null,
+    "data_status": "INSUFFICIENT_PROBLEM_DATA",
+    "data_gap": "Es primero un pedido al cliente, no un problema tecnico: falta saber si Guille puede exportar precios desde Distribuir. Sin eso no se puede decidir si hace falta extraccion de sistema heredado o alcanza con pedirselo.",
+    "required_capabilities": [],
+    "useful_capabilities": ["legacy_data_extraction"],
     "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md + HANDOFF_LAGENE_CIRCUITO_2026-08-16.md (bloqueante 1).",
     "tags": ["bloqueante", "pedir-a-guille", "datos-faltantes"]
   },
@@ -94,6 +120,10 @@
     "frequency": null,
     "severity": null,
     "economic_impact": null,
+    "data_status": "INSUFFICIENT_PROBLEM_DATA",
+    "data_gap": "Falta un renglon con su neto al lado para poder deducir la formula. Es ingenieria inversa de un calculo, no una carencia de tecnologia: ninguna herramienta externa lo resuelve.",
+    "required_capabilities": [],
+    "useful_capabilities": [],
     "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md + HANDOFF_LAGENE_CIRCUITO_2026-08-16.md (bloqueante 2).",
     "tags": ["bloqueante", "pedir-a-guille", "integridad-de-datos"]
   },
@@ -108,7 +138,10 @@
     "frequency": 10,
     "severity": null,
     "economic_impact": null,
-    "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md (seccion 'Como mide Guille el negocio'). Dicho por Guille el 16/08/2026.",
+    "data_status": "OK",
+    "required_capabilities": ["dashboards_reporting"],
+    "useful_capabilities": [],
+    "evidence": "freddy-agent-os/memory/rules/circuito_lagene.md (seccion 'Como mide Guille el negocio'). Dicho por Guille el 16/08/2026. Ya implementado parcialmente en magna-pedidos-lagene.",
     "tags": ["kpi", "ya-implementado-parcial"]
   },
   {
@@ -122,6 +155,10 @@
     "frequency": null,
     "severity": null,
     "economic_impact": null,
+    "data_status": "INSUFFICIENT_PROBLEM_DATA",
+    "data_gap": "Es un encuadre de producto, no un problema accionable. No dice QUE opciones sobran ni cuales le duelen. Sin esa lista no hay requisito que matchear.",
+    "required_capabilities": [],
+    "useful_capabilities": [],
     "evidence": "Dicho por Guille. Registrado en el master handoff de Luka (17/08/2026) y en project_guille_lagene.",
     "tags": ["encuadre-producto"]
   },
@@ -136,7 +173,63 @@
     "frequency": null,
     "severity": null,
     "economic_impact": null,
+    "data_status": "INSUFFICIENT_PROBLEM_DATA",
+    "data_gap": "El dolor esta claro pero el proceso actual NO se relevo. Sin saber que hace hoy no se puede evaluar si una tecnologia mejora algo o duplica lo que ya tiene en Distribuir.",
+    "required_capabilities": [],
+    "useful_capabilities": ["dashboards_reporting"],
     "evidence": "freddy-agent-os/logs/ARRANQUE_BACKUP_GUILLE_2026-08-13.md (que buscar: cuenta corriente).",
     "tags": ["por-relevar", "cobranzas"]
+  },
+
+  {
+    "code": "WF-CTX-001",
+    "project": "claude-code-workflow",
+    "category": "memoria-de-agentes",
+    "title": "El conocimiento se pierde cuando termina la sesion",
+    "description": "Cada sesion nueva arranca sin lo aprendido en la anterior. La respuesta del proyecto fue escribir todo a mano en Markdown y mantener 152 handoffs, mas un indice y un grafo. Funciona, pero el costo de mantenerlo lo paga una persona.",
+    "current_process": "memoria canonica en Markdown (freddy-agent-os/memory) + handoff escrito al cerrar cada sesion + grafo Graphify",
+    "workaround": "escribir handoffs a mano",
+    "frequency": 9,
+    "severity": null,
+    "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": ["persistent_memory"],
+    "useful_capabilities": ["knowledge_retrieval"],
+    "evidence": "freddy-agent-os/AGENTS.md seccion 7: 'No se depende de que el agente se acuerde. Si no esta escrito, no existe.' 152 archivos en logs/ al 24/08/2026.",
+    "tags": ["memoria", "ya-resuelto-a-mano"]
+  },
+  {
+    "code": "WF-REG-002",
+    "project": "claude-code-workflow",
+    "category": "recuperacion-de-conocimiento",
+    "title": "La regla ya existia y no se busco antes de actuar",
+    "description": "Paso tres veces en una sola sesion: la informacion estaba en la memoria canonica y el agente actuo sin consultarla. Se resolvio con candados en el codigo, no confiando en que el agente recuerde.",
+    "current_process": "candados en codigo (memoria_lookup.js, proveedor_recall.js, regla.js) + Memory Preflight obligatorio antes de escribir",
+    "workaround": "candados y gates manuales",
+    "frequency": 7,
+    "severity": null,
+    "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": ["knowledge_retrieval"],
+    "useful_capabilities": ["persistent_memory"],
+    "evidence": "freddy-agent-os/logs/HANDOFF_CARGA_15_AL_19_Y_CANDADOS_2026-08-20.md, error #73: 'tres veces la regla existia y no se busco' (Alejandro, jamon Gonzales/GONZALEZ, mortadela).",
+    "tags": ["known-error", "candados"]
+  },
+  {
+    "code": "WF-SCP-003",
+    "project": "claude-code-workflow",
+    "category": "alcance-de-tareas",
+    "title": "Una tarea acotada se convierte en uno de tres horas",
+    "description": "Un cierre diario que deberia tomar menos de 10 minutos se transformaba en auditoria profunda. Esta declarado como anti-patron prohibido en la constitucion del proyecto.",
+    "current_process": "dos modos operativos separados por escrito (Cierre Rapido vs Auditoria Profunda) + skill_registry que define que cargar segun el trigger",
+    "workaround": "disciplina documentada",
+    "frequency": 6,
+    "severity": null,
+    "economic_impact": null,
+    "data_status": "OK",
+    "required_capabilities": ["agent_task_scoping"],
+    "useful_capabilities": ["knowledge_retrieval"],
+    "evidence": "freddy-agent-os/AGENTS.md seccion 6: 'Anti-patron conocido: convertir un cierre rapido en auditoria profunda -> cierres de 3 horas. Prohibido.'",
+    "tags": ["anti-patron", "ya-resuelto-a-mano"]
   }
 ]

@@ -33,23 +33,50 @@ db.tx(() => {
   const projectId = {};
   for (const r of db.all('SELECT id, slug FROM projects')) projectId[r.slug] = r.id;
 
+  // --- capacidades (la taxonomia) ---
+  for (const c of read('capabilities.json')) {
+    if (!c.id) continue;
+    db.run(`INSERT INTO capabilities (id, nombre, descripcion) VALUES (?, ?, ?)
+            ON CONFLICT(id) DO UPDATE SET nombre=excluded.nombre, descripcion=excluded.descripcion`,
+      c.id, c.nombre, c.descripcion);
+  }
+
   // --- problemas ---
   // evidence es NOT NULL a proposito: un problema sin fuente no entra al radar (D-006).
+  const capsValidas = new Set(db.all('SELECT id FROM capabilities').map(c => c.id));
   for (const p of read('problems.json')) {
+    if (!p.code) continue;
     const pid = projectId[p.project];
     if (!pid) throw new Error(`problema ${p.code}: proyecto '${p.project}' no existe`);
     if (!p.evidence) throw new Error(`problema ${p.code}: sin evidencia. No se carga.`);
     db.run(`INSERT INTO problems (code, project_id, title, description, category,
-              severity, frequency, economic_impact, current_process, workaround, evidence, tags)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+              severity, frequency, economic_impact, current_process, workaround,
+              data_status, data_gap, evidence, tags)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(code) DO UPDATE SET
               title=excluded.title, description=excluded.description, category=excluded.category,
               severity=excluded.severity, frequency=excluded.frequency,
               economic_impact=excluded.economic_impact, current_process=excluded.current_process,
-              workaround=excluded.workaround, evidence=excluded.evidence, tags=excluded.tags`,
+              workaround=excluded.workaround, data_status=excluded.data_status,
+              data_gap=excluded.data_gap, evidence=excluded.evidence, tags=excluded.tags`,
       p.code, pid, p.title, p.description ?? null, p.category ?? null,
       p.severity ?? null, p.frequency ?? null, p.economic_impact ?? null,
-      p.current_process ?? null, p.workaround ?? null, p.evidence, JSON.stringify(p.tags ?? []));
+      p.current_process ?? null, p.workaround ?? null,
+      p.data_status ?? 'OK', p.data_gap ?? null, p.evidence, JSON.stringify(p.tags ?? []));
+
+    // Capacidades del problema. Una capacidad que no esta en la taxonomia es un error:
+    // significa que alguien la invento al vuelo para forzar un match.
+    const probId = db.get('SELECT id FROM problems WHERE code = ?', p.code).id;
+    db.run('DELETE FROM problem_capabilities WHERE problem_id = ?', probId);
+    for (const [kind, lista] of [['required', p.required_capabilities ?? []],
+                                 ['useful',   p.useful_capabilities ?? []]]) {
+      for (const cap of lista) {
+        if (!capsValidas.has(cap))
+          throw new Error(`problema ${p.code}: capacidad '${cap}' no existe en seed/capabilities.json`);
+        db.run(`INSERT OR IGNORE INTO problem_capabilities (problem_id, capability_id, kind)
+                VALUES (?, ?, ?)`, probId, cap, kind);
+      }
+    }
   }
 
   // --- fuentes ---

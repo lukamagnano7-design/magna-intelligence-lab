@@ -37,6 +37,11 @@ CREATE TABLE IF NOT EXISTS problems (
   economic_impact INTEGER CHECK (economic_impact IS NULL OR economic_impact BETWEEN 1 AND 10),
   current_process TEXT,           -- como lo resuelve HOY
   workaround      TEXT,           -- el Excel / el papel / el parche
+  -- Si no hay datos suficientes para matchear con confianza, se DICE. Un score fabricado
+  -- sobre un problema mal documentado contamina todas las decisiones que vengan despues.
+  data_status     TEXT NOT NULL DEFAULT 'OK'
+                  CHECK (data_status IN ('OK','INSUFFICIENT_PROBLEM_DATA')),
+  data_gap        TEXT,           -- que falta exactamente. Es la pregunta para el cliente.
   evidence        TEXT NOT NULL,  -- de donde salio. Sin fuente no entra.
   status          TEXT NOT NULL DEFAULT 'open'
                   CHECK (status IN ('open','solved','wont_fix','superseded')),
@@ -148,17 +153,53 @@ CREATE TABLE IF NOT EXISTS research_reports (
   created_at      TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
--- El Matching Engine. Tres ejes separados a proposito:
--- algo puede ser 10 en relevancia y 2 en implementacion. Con un solo score, eso se pierde.
+-- La taxonomia de capacidades: la capa semantica entre tecnologia y problema.
+-- Existe para NO matchear por parecido de palabras, que seria el mismo error que
+-- 'Polar' matcheando dentro de 'GRUPOLAR'. Ver seed/capabilities.json.
+CREATE TABLE IF NOT EXISTS capabilities (
+  id          TEXT PRIMARY KEY,           -- slug estable: 'document_generation'
+  nombre      TEXT NOT NULL,
+  descripcion TEXT NOT NULL,
+  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- Que capacidades NECESITA un problema. 'required' = sin eso no se resuelve.
+CREATE TABLE IF NOT EXISTS problem_capabilities (
+  problem_id    TEXT NOT NULL REFERENCES problems(id)     ON DELETE CASCADE,
+  capability_id TEXT NOT NULL REFERENCES capabilities(id) ON DELETE CASCADE,
+  kind          TEXT NOT NULL CHECK (kind IN ('required','useful')),
+  PRIMARY KEY (problem_id, capability_id, kind)
+);
+
+-- Que capacidades OFRECE una tecnologia, y con cuanta confianza lo sabemos.
+-- 'curado' = alguien lo verifico. 'inferido' = salio de leer el README, y vale menos.
+CREATE TABLE IF NOT EXISTS technology_capabilities (
+  technology_id TEXT NOT NULL REFERENCES technologies(id) ON DELETE CASCADE,
+  capability_id TEXT NOT NULL REFERENCES capabilities(id) ON DELETE CASCADE,
+  origen        TEXT NOT NULL CHECK (origen IN ('curado','inferido','declarado')),
+  evidencia     TEXT,
+  PRIMARY KEY (technology_id, capability_id)
+);
+
+-- El Matching Engine. Un match NO es un numero: es un argumento con evidencia.
+-- Incluye NO_MATCH explicito, porque "esto no resuelve nada nuestro" es una conclusion
+-- valiosa y NO desmerece la calidad tecnica de la herramienta.
 CREATE TABLE IF NOT EXISTS matches (
   id                   TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
   technology_id        TEXT NOT NULL REFERENCES technologies(id) ON DELETE CASCADE,
   project_id           TEXT NOT NULL REFERENCES projects(id)     ON DELETE CASCADE,
   problem_id           TEXT REFERENCES problems(id) ON DELETE SET NULL,
-  relevance_score      REAL NOT NULL CHECK (relevance_score      BETWEEN 0 AND 10),
-  implementation_score REAL          CHECK (implementation_score BETWEEN 0 AND 10),
-  business_value_score REAL          CHECK (business_value_score BETWEEN 0 AND 10),
-  rationale            TEXT NOT NULL,   -- el porque. Un numero sin porque no sirve.
+  outcome              TEXT NOT NULL DEFAULT 'MATCH'
+                       CHECK (outcome IN ('MATCH','NO_MATCH','INSUFFICIENT_PROBLEM_DATA')),
+  matched_capabilities TEXT NOT NULL DEFAULT '[]',
+  missing_capabilities TEXT NOT NULL DEFAULT '[]',
+  confidence           TEXT CHECK (confidence IN ('HIGH','MEDIUM','LOW')),
+  relevance_score      REAL CHECK (relevance_score      BETWEEN 0 AND 10),
+  implementation_score REAL CHECK (implementation_score BETWEEN 0 AND 10),
+  business_value_score REAL CHECK (business_value_score BETWEEN 0 AND 10),
+  argument             TEXT NOT NULL,   -- el porque, en castellano
+  evidence             TEXT,
+  recommended_action   TEXT,
   created_at           TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

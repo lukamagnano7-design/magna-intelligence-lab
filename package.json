@@ -10,6 +10,8 @@
     "init": "node scripts/init_db.js",
     "problemas": "node scripts/problemas.js",
     "recolectar": "node scripts/recolectar.js",
-    "analizar": "node scripts/analizar.js"
+    "analizar": "node scripts/analizar.js",
+    "match": "node scripts/match.js",
+    "test": "node test/matcher.test.js"
   }
 }

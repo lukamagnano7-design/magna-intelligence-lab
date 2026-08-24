@@ -13,7 +13,10 @@ const { extraerSenales } = require('../lib/senales');
 const { extraerEntidades } = require('../lib/entidades');
 const { resolver } = require('../lib/fuente_primaria');
 const conocimiento = require('../lib/conocimiento');
-const { puntuar, cruzar, veredicto, CRITERIOS } = require('../lib/veredicto');
+const capacidades = require('../lib/capacidades');
+const matcher = require('../lib/matcher');
+const riesgo = require('../lib/riesgo');
+const { puntuar, veredicto, CRITERIOS } = require('../lib/veredicto');
 
 const arg = process.argv[2];
 const jsonOut = process.argv.includes('--json');
@@ -106,14 +109,86 @@ const bloque = (t) => console.log(`\n── ${t} ${'─'.repeat(Math.max(0, 72 -
   if (!algoSabido) console.log('  Nada previo. Es material nuevo para nosotros.');
   const yaResuelto = previos.find(p => p.ya_resuelto) ?? null;
 
-  // ---------------------------------------------------------------- 6. cruce
-  bloque('6. CRUCE CON NUESTROS PROYECTOS');
-  for (const m of cruzar(null, principal))
-    console.log(`  ${m.proyecto.slug.padEnd(24)} ${String(m.problemas_abiertos).padStart(2)} problemas abiertos · relevancia: ${m.relevancia ?? 'sin evaluar'}`);
-  console.log('\n  No se fuerza ningun match: sin criterio, un numero acá seria inventado.');
+  // ---------------------------------------------------------------- 6. capacidades + cruce
+  bloque('6. CALIDAD TECNICA  (independiente de si nos sirve)');
+  if (principal) {
+    console.log(`  Mantenimiento : ${principal.mantenimiento}${principal.dias_sin_push != null ? ` (push hace ${principal.dias_sin_push} dias)` : ''}`);
+    console.log(`  Validacion    : ${principal.stars != null ? principal.stars + ' stars' : 'n/d'} · ${principal.issues_abiertos ?? '?'} issues abiertos`);
+    console.log(`  Licencia      : ${principal.licencia}`);
+    console.log('\n  Una herramienta puede ser excelente y no resolvernos nada. Son dos cosas distintas.');
+  } else console.log('  Sin fuente primaria: no se puede evaluar la calidad tecnica.');
 
-  // ---------------------------------------------------------------- 7. criterios
-  bloque('7. LOS 8 CRITERIOS');
+  bloque('7. CAPACIDADES QUE OFRECE');
+  const techId = principal
+    ? capacidades.registrar(principal.nombre, principal.url, principal.descripcion) : null;
+  let cruce = { matches: [], no_matches: [], insuficientes: [], sin_base: true };
+  let caps = { caps: [], nota_curada: null };
+
+  if (techId) {
+    caps = capacidades.determinar({
+      nombre: principal.nombre, repo: principal.nombre,
+      readme: principal.readme, descripcion: principal.descripcion });
+    capacidades.guardar(techId, caps.caps);
+    if (caps.caps.length) {
+      for (const c of caps.caps) console.log(`  · ${c.capability_id.padEnd(28)} [${c.origen}]`);
+    } else {
+      console.log('  Ninguna capacidad de nuestra taxonomia.');
+      if (caps.nota_curada) console.log(`  ↳ ${caps.nota_curada}`);
+    }
+    cruce = matcher.cruzar(techId, { determinado: Boolean(caps.determinado) });
+    matcher.guardar(techId, cruce);
+  }
+
+  bloque('8. RELEVANCIA DE NEGOCIO');
+  if (cruce.sin_base) {
+    console.log('  SIN BASE PARA MATCHEAR: no se pudieron determinar capacidades.');
+    console.log('  Eso NO significa que no sirva: significa que no sabemos que hace.');
+  } else if (!cruce.matches.length) {
+    console.log('  >>> NO_MATCH <<<\n');
+    console.log('  No resuelve ninguno de nuestros problemas documentados.');
+    console.log('  Es una conclusion valida y NO desmerece la calidad tecnica.');
+  } else {
+    for (const m of cruce.matches) {
+      console.log(`\n  MATCH · ${m.problema.code} (${m.problema.proyecto}) · confianza ${m.confidence} · relevancia ${m.relevance_score}/10`);
+      console.log(`    ${m.problema.title}`);
+      console.log(`    capacidades que pegan : ${m.matched.join(', ')}`);
+      if (m.missing.length) console.log(`    capacidades que faltan: ${m.missing.join(', ')}`);
+      console.log(`    argumento : ${m.argument}`);
+    }
+  }
+  if (!cruce.sin_base) {
+    const parciales = cruce.no_matches.filter(n => n.matched?.length);
+    if (parciales.length) {
+      console.log('\n  Relacionados pero NO resueltos:');
+      for (const n of parciales)
+        console.log(`    ${n.problema.code}: ${n.argument}`);
+    }
+    console.log(`\n  ${cruce.matches.length} match · ${cruce.no_matches.length} no-match · ${cruce.insuficientes.length} con datos insuficientes`);
+    if (cruce.insuficientes.length) {
+      console.log('\n  EXCLUIDOS POR FALTA DE DATOS (hay que preguntarle al cliente):');
+      for (const i of cruce.insuficientes)
+        console.log(`    ${i.problema.code}: ${(i.motivo || '').slice(0, 105)}`);
+    }
+  }
+
+  // ---------------------------------------------------------------- riesgo por uso
+  bloque('9. USO PRETENDIDO Y RIESGO');
+  const esWf = cruce.matches.some(m => m.problema.proyecto === 'claude-code-workflow');
+  const uso = riesgo.usoProbable({ matches: cruce.matches, esWorkflow: esWf });
+  console.log(`  Uso probable: ${uso.uso}`);
+  console.log(`  ${uso.porque}`);
+  if (principal) {
+    const ev = riesgo.evaluar(principal.licencia, { archivado: principal.archivado });
+    console.log(`\n  Licencia declarada: ${ev.licencia}\n`);
+    for (const f of ev.filas)
+      console.log(`    ${f.nivel.padEnd(9)} ${f.nombre.padEnd(30)} ${f.uso === uso.uso ? '<-- el nuestro' : ''}`);
+    const mio = ev.filas.find(f => f.uso === uso.uso);
+    if (mio) console.log(`\n  Para NUESTRO uso (${mio.nombre}): riesgo ${mio.nivel}\n    ${mio.porque}`);
+    console.log(`\n  ${ev.aviso}`);
+  }
+
+  // ---------------------------------------------------------------- 10. criterios
+  bloque('10. LOS 8 CRITERIOS DE LA FUENTE');
   const scores = puntuar({
     fuente: { id: item.sid }, primaria: principal,
     conocimiento: { entidades: db.all('SELECT * FROM entities WHERE item_id = ?', item.id) },
@@ -124,9 +199,10 @@ const bloque = (t) => console.log(`\n── ${t} ${'─'.repeat(Math.max(0, 72 -
     console.log(`  ${val}  ${desc.split(':')[0].padEnd(22)} ${s?.porque ?? ''}`.slice(0, 118));
   }
 
-  // ---------------------------------------------------------------- 8. veredicto
-  const v = veredicto({ primaria: principal, conocimiento: yaResuelto, scores });
-  bloque('8. VEREDICTO');
+  // ---------------------------------------------------------------- 11. veredicto
+  const v = veredicto({ primaria: principal, conocimiento: yaResuelto, scores,
+                        cruce, uso, esWorkflow: esWf });
+  bloque('11. VEREDICTO');
   console.log(`\n     >>> ${v.verdict} <<<\n`);
   console.log(`  POR QUE   : ${v.porque}`);
   console.log(`  SIGUIENTE : ${v.siguiente}`);
