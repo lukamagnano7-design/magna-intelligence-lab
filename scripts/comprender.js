@@ -57,6 +57,10 @@ const fmt = cobertura.fmt;
   const rutaVideo = flag('--video');
   const rutaAudio = flag('--audio');
   const modelo = flag('--modelo') || 'base';
+  // `auto` deja que whisper detecte el idioma. Hace falta porque el corpus es mixto:
+  // el Reel de Metallurgia es en espaniol y el de Bennett en ingles. Forzar 'es' sobre
+  // material en ingles produciria una traduccion silenciosa, no una transcripcion.
+  const idioma = flag('--idioma') || 'auto';
   if (rutaVideo) console.log(`\n  Reutilizando video ya descargado: ${rutaVideo}`);
   if (rutaAudio) console.log(`  Reutilizando audio ya descargado: ${rutaAudio}`);
 
@@ -75,7 +79,7 @@ const fmt = cobertura.fmt;
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mil-aud-'));
   let aud;
   try {
-    aud = audio.extraer(item, tmp, { modelo, archivoLocal: rutaAudio });
+    aud = audio.extraer(item, tmp, { modelo, idioma, archivoLocal: rutaAudio });
   } finally { /* el tmp se limpia al final */ }
 
   if (!aud.ok) {
@@ -86,7 +90,7 @@ const fmt = cobertura.fmt;
     console.log(`  Audio             ${aud.duracion_audio_s} s (${fmt(aud.duracion_audio_s)}) · ${m.mb_audio} MB`);
     console.log(`  Cubierto por voz  hasta ${aud.cubierto_s.toFixed(1)} s (${fmt(aud.cubierto_s)})`);
     console.log(`  Tiempos (s)       descarga ${(m.ms_descarga / 1000).toFixed(1)} · wav ${(m.ms_wav / 1000).toFixed(1)} · whisper ${(m.ms_whisper / 1000).toFixed(1)}`);
-    audio.guardar(item.id, aud.segmentos, { modelo });
+    audio.guardar(item.id, aud.segmentos, { modelo: `${modelo}:${idioma}` });
     const palabras = aud.segmentos.reduce((s, x) => s + x.texto.split(/\s+/).length, 0);
     console.log(`  Palabras          ${palabras}`);
   }
