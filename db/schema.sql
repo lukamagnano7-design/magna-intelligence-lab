@@ -97,6 +97,10 @@ CREATE TABLE IF NOT EXISTS items (
   coverage     TEXT CHECK (coverage IS NULL OR coverage IN ('COMPLETE','PARTIAL','NONE')),
   coverage_pct REAL,
   coverage_nota TEXT,
+  -- Duracion real del medio, medida con ffprobe ANTES de analizarlo (LAB-DEEP-001).
+  -- Es el DENOMINADOR de coverage_pct. Sin este dato, cualquier porcentaje de cobertura lo
+  -- fija el mismo proceso que lo consume, y siempre da bien.
+  duracion_s   REAL,
   created_at   TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
