@@ -32,7 +32,7 @@ Metallurgia o Paperclip **no entra** — va a la sección F como hipótesis.
 
 ---
 
-## Capacidades OBLIGATORIAS
+## Capacidades OBLIGATORIAS  (12)
 
 ### C1 · `record` — fuente de verdad
 
@@ -40,7 +40,7 @@ Metallurgia o Paperclip **no entra** — va a la sección F como hipótesis.
 |---|---|
 | **Propósito** | Un único lugar donde vive el hecho. Derivable y versionado. |
 | **Obligatoria** | ✅ |
-| **Evidencia** | `magna.db` + `create_schema.js` + `seed/` + `magna.dump.sql` en git + backups rotados. El arnés **M4** verifica que el plano coincida con la tabla real. **Y el daño de no cumplirlo**: `data/*.json` conviviendo con la base (riesgo R1). |
+| **Evidencia** | `magna.db` + `create_schema.js` + `seed/` + `magna.dump.sql` en git + backups rotados. El arnés **M4** verifica que el plano coincida con la tabla real. **Y el daño de no cumplirlo**: los `data/*.json` congelados (sección T) — el sistema aguantó porque `data_sqlite.js` centralizó la lectura, no por suerte. |
 | **Interfaz mínima** | `esquema()` declarado · `reconstruir()` desde semilla · `dump()` versionable · `backup()` verificado abriéndolo |
 | **Riesgo** | **CRÍTICO** — sin esto no hay departamento, hay archivos |
 | **Human gate** | ✅ para escribir |
@@ -163,9 +163,9 @@ Metallurgia o Paperclip **no entra** — va a la sección F como hipótesis.
 
 ---
 
-## Capacidades RECOMENDADAS
+## Capacidades RECOMENDADAS  (3)
 
-### C12 · `plans` — el plan como artefacto
+### C13 · `plans` — el plan como artefacto
 
 | | |
 |---|---|
@@ -176,7 +176,7 @@ Metallurgia o Paperclip **no entra** — va a la sección F como hipótesis.
 | **Riesgo** | **MEDIO** |
 | **Human gate** | ✅ el plan se aprueba |
 
-### C13 · `handoff` — estado transportable entre sesiones
+### C14 · `handoff` — estado transportable entre sesiones
 
 | | |
 |---|---|
@@ -187,7 +187,7 @@ Metallurgia o Paperclip **no entra** — va a la sección F como hipótesis.
 | **Riesgo** | **MEDIO** |
 | **Human gate** | ❌ |
 
-### C14 · `improvement` — el buzón donde el límite se vuelve trabajo
+### C15 · `improvement` — el buzón donde el límite se vuelve trabajo
 
 | | |
 |---|---|
@@ -198,16 +198,18 @@ Metallurgia o Paperclip **no entra** — va a la sección F como hipótesis.
 | **Riesgo** | **MEDIO** — sin esto los gaps se pierden en conversación |
 | **Human gate** | ❌ para registrar · ✅ para priorizar |
 
-### C15 · `kpis` — qué mide el departamento
+### C12 · `kpis` — cómo sabemos si está funcionando
+
+> **PROMOVIDA A OBLIGATORIA** por decisión de Luka + ChatGPT (25/08/2026).
 
 | | |
 |---|---|
-| **Propósito** | Que exista una definición declarada de "va bien". |
-| **Obligatoria** | ⭕ recomendada |
-| **Evidencia** | Freddy los tiene (ventas, margen, CMV, posición real) pero **no declarados como interfaz**: viven dentro de la app. |
-| **Interfaz mínima** | lista declarada, con su fórmula y su fuente |
-| **Riesgo** | **BAJO** |
-| **Human gate** | ✅ para definirlos |
+| **Propósito** | Que exista una definición declarada de **si el departamento está funcionando, mejorando o empeorando**. No es "qué números muestra": es el criterio de salud del negocio. |
+| **Obligatoria** | ✅ |
+| **Evidencia** | Freddy los tiene (ventas, margen, CMV, posición real) pero **no declarados como interfaz**: viven dentro de la app. Y el daño de no declararlos está medido: el arnés **A3** nació de un *margen de seguridad del 99% calculado con 17 de 19 categorías en cero*. Un KPI sin fuente ni cobertura declarada miente con confianza. |
+| **Interfaz mínima** | lista declarada, y por cada KPI: **fórmula · fuente · cobertura · dirección** (si sube, ¿es mejor o peor?). Un KPI sobre datos incompletos debe poder declararse incompleto en vez de mostrarse |
+| **Riesgo** | **ALTO** — sin esto no se puede saber si un departamento va bien, y por lo tanto tampoco si un cambio lo mejoró |
+| **Human gate** | ✅ para definirlos y para cambiar una fórmula |
 
 ---
 
@@ -253,10 +255,10 @@ obligatorias: **no hay evidencia de uso, solo de intención.**
 | C12 | `plans` | ✅ **ALREADY_HAVE** | 42 |
 | C13 | `handoff` | ✅ **ALREADY_HAVE** | 76 |
 | C14 | `improvement` | 🟡 **PARTIAL** | el ciclo existe, se cierra a mano |
-| C15 | `kpis` | 🟡 **PARTIAL** | existen, no declarados |
+| C12 | `kpis` | 🟡 **PARTIAL** | existen, no declarados como interfaz (obligatorio desde 25/08) |
 | C16–C18 | `approvals`/`audit`/`runs` | 🟡 **PRE-DISEÑADO** | tablas vacías |
 
-**Freddy cumple 9 de 15 completo, 5 parcial, 1 faltante.** Es el benchmark del contrato
+**Freddy cumple 9 de 15 completo, 5 parcial, 1 faltante.** ( pasó a obligatorio el 25/08 y Freddy lo cumple solo parcial: los tiene, no los declara.) Es el benchmark del contrato
 porque el contrato salió de él — pero **no lo cumple entero**, y eso es información útil.
 
 ---
@@ -286,7 +288,7 @@ capa de inteligencia falta **encima** de lo que ya hay.
 | C12 | `plans` | ❌ **MISSING** | |
 | C13 | `handoff` | 🟡 **PARTIAL** | `ESTADO.md` cumple ese rol para el rediseño visual, no para la operación |
 | C14 | `improvement` | ❌ **MISSING** | |
-| C15 | `kpis` | ✅ **ALREADY_HAVE** | Stock total · Propio · Señados · Consignación · Vendidos · Costo del stock · Precio de venta del stock · Margen esperado · En consignación · **Ganancia realizada** |
+| C12 | `kpis` | ✅ **ALREADY_HAVE** | Stock total · Propio · Señados · Consignación · Vendidos · Costo del stock · Precio de venta del stock · Margen esperado · En consignación · **Ganancia realizada** |
 | C16 | `approvals` | ❌ **MISSING** | |
 | C17 | `audit` | ❓ **UNKNOWN** | hay `rls.sql`; **no verifiqué si Supabase tiene audit/triggers activos** |
 | C18 | `runs` | 🚫 **NOT_NEEDED** (hoy) | no hay agentes corriendo. Se necesita el día que los haya |
@@ -390,16 +392,19 @@ Ninguna de estas sale de leer archivos.
 
 > Se registran acá como pide el encargo. **No se tocó ninguno.**
 
-### R1 · Doble source of truth: `data/*.json` vs `magna.db`
+### R1 · `data/*.json` vs `magna.db` — **RESUELTO POR TRACING (25/08)**
 
-`data/` conserva `compras.json`, `gastos.json`, `dias.json`, `precios_vigentes.json`,
-`compras_items.json`, `capital.json`, `pagos.json` **conviviendo con la base**.
+> **Corrijo mi propia evaluación.** En `MAGNA-ORG-001` lo marqué como *"severidad ALTA, la
+> única que podría estar activa hoy"*. **El tracing de código demuestra que eso era falso.**
+> El resultado completo está en la sección T.
 
-- **No verifiqué cuál gana en cada camino de lectura.**
-- **Riesgo:** si algún código lee el JSON viejo, hay dos verdades y la app puede mostrar una
-  y la base tener otra — que es **exactamente el bug del que nació el arnés A2**.
-- **Severidad: ALTA.** Es la única de esta lista que podría estar activa hoy.
-- **Candidato a arnés**, no a limpieza a mano.
+**No hay doble fuente de verdad.** Los JSON están congelados, nadie los escribe, y ningún
+motor vivo los lee. `salud.js` ya los vigila y KE#55 los declara resueltos desde el 05/08.
+
+**Lo que sí queda es un riesgo distinto y más chico**, que el tracing sí encontró: un **gate
+de validación cableado al universo equivocado** (`build.ps1` → `validate_data.js`). Ver T.4.
+
+**Severidad corregida: MEDIA-BAJA**, y no es de datos: es de tooling y documentación.
 
 ### R2 · Roles en Markdown obsoletos
 
@@ -431,7 +436,136 @@ del **Maestro** — un sistema que dejó de usarse al migrar a `magna.db`.
 
 ---
 
+---
+
+# T · TRACING `data/*.json` vs `magna.db` — READ ONLY
+
+**Encargo:** no preguntarle a Luka de memoria; determinar por código si los JSON son
+histórico, compatibilidad, cache o fuente de verdad activa.
+
+## T.1 · Estado de los archivos
+
+| Archivo | Última escritura | Filas JSON | Filas DB | Brecha |
+|---|---|---|---|---|
+| `data/dias.json` | **17/07** | 16 | **84** | 5,2× |
+| `data/compras.json` | **17/07** | 41 | **226** | 5,5× |
+| `data/compras_items.json` | **16/07** | 152 | **737** | 4,8× |
+| `data/gastos.json` | **16/07** | 5 | **29** | 5,8× |
+| `data/pagos.json` | **17/07** | 4 | **31** | 7,8× |
+| `data/precios_vigentes.json` | **16/07** | 119 | **372** | 3,1× |
+| `data/capital.json` | **30/06** | — | 1 | — |
+| `magna.db` | **24/08** | | | |
+
+**Ninguno fue escrito en ~5 semanas.** La brecha no es de días: es de un factor de 5.
+
+## T.2 · ¿Quién ESCRIBE los JSON?
+
+```
+grep -rn "writeFileSync|createWriteStream|appendFileSync" → filtrado a data/*.json
+resultado: NINGUNO
+```
+
+**Cero escritores.** No hay un solo camino de código que escriba estos archivos.
+
+## T.3 · ¿Quién LEE, y de dónde lee la app viva?
+
+| Consumidor | Lee | Estado |
+|---|---|---|
+| `server.js` | `DatabaseSync(magna.db)` | ✅ **la app viva: solo SQLite** |
+| `data_sqlite.js` | `DatabaseSync(readOnly)` | ✅ capa única de lectura |
+| `carga.js` | `DatabaseSync` | ✅ el motor de carga: solo SQLite |
+| `build_app.js` | `require("./data_sqlite")` | ✅ migrado el 05/08 (KE#55) |
+| `arneses/*` | magna.db | ✅ **ningún arnés mira `data/`** |
+| `validate_db.js` | magna.db | ✅ el validador vigente |
+| — | — | |
+| `validate_data.js` | `data/*.json` | ⚠️ **legacy — ver T.4** |
+| `migrate_json_to_sqlite.js` | `data/*.json` | histórico (la migración) |
+| `validate_migration.js` | JSON vs DB | histórico (verificó la migración) |
+| `normalize_compras_items_bruto.js` | ruta absoluta a `compras_items.json` | one-off de junio |
+| `salud.js` | **el mtime**, no el contenido | ✅ **vigilancia deliberada** |
+
+**`data_sqlite.js` es la clave**, y su encabezado lo dice: *"devuelve los mismos shapes que
+venían de `data/*.json` y `seed/*.json`, para que quien los consuma no tenga que cambiar"*.
+**Es una capa de compatibilidad de forma, no de datos.**
+
+## T.4 · El riesgo que el tracing SÍ encontró
+
+```
+build.ps1
+  └→ node validate_data.js     ← valida data/*.json  (congelados en el 17/07)
+       └→ si OK → node build_app.js  ← lee magna.db vía data_sqlite  (24/08)
+```
+
+**El gate valida un universo y el build consume otro.** Las consecuencias:
+
+- Un `PASS` significa *"la foto del 17 de julio es coherente"*, **no** *"los datos actuales
+  son coherentes"*.
+- Puede **fallar** sobre datos viejos y bloquear un build de datos actuales perfectamente
+  buenos.
+- Puede **pasar** mientras los datos actuales están rotos.
+
+Es un **falso candado** — exactamente el patrón del arnés **M4** (*"un candado que se declara
+y no existe es peor que no tenerlo"*), y de la misma familia que KE#55 (*"se movió el dato y
+no se re-cableó el motor que depende de él"*), solo que acá lo que quedó sin re-cablear es el
+**validador**, no un motor.
+
+**Y hay un riesgo de documentación encima:** `COMO_USAR.md` sigue diciendo
+`node validate_data.js   # valida seed/ y data/` como procedimiento vigente, y lista `data/`
+entre lo que **sí se versiona y se edita a mano**. Una persona o un agente que siga ese
+documento editaría un archivo congelado creyendo que cambia el sistema.
+
+## T.5 · Veredicto
+
+| Pregunta | Respuesta |
+|---|---|
+| ¿Son fuente de verdad activa? | **NO** |
+| ¿Son cache? | **NO** — nada los regenera |
+| ¿Son compatibilidad? | **NO** — la compatibilidad la da `data_sqlite.js`, que emula el *shape* desde la DB |
+| ¿Son histórico? | **SÍ** — foto congelada pre-migración del 16–17/07 |
+
+**`data/*.json` = HISTÓRICO CONGELADO.** El sistema ya lo sabe (KE#55 ✅ RESUELTO 05/08),
+ya lo vigila (`salud.js` reporta la deriva como `info`, no como error, porque estar atrasados
+es **lo esperado**) y ya lo documentó.
+
+**Riesgo residual real:** un validador y un documento que apuntan al universo viejo.
+**No se corrigió nada** — se registra para decisión.
+
+---
+
+# DECISIONES APLICADAS (Luka + ChatGPT, 25/08/2026)
+
+| # | Decisión | Estado |
+|---|---|---|
+| 1 | **`kpis` pasa de RECOMENDADO a OBLIGATORIO** — un departamento debe declarar cómo sabemos si funciona, mejora o empeora | ✅ aplicado (C12) |
+| 2 | **`approvals`/`audit`/`runs` NO se cablean.** Se mantienen como PRE-DISEÑADOS / deuda declarada. *No construir infraestructura sin un problema que la justifique* | ✅ sin cambios (C16–C18) |
+| 3 | **JSON vs SQLite: tracing en vez de preguntar** | ✅ ejecutado (sección T) |
+| 4 | **Autos `dias_en_stock`: NO fijar 30/60/90 arbitrariamente.** La política se deriva del negocio real, combinando días · capital · margen esperado · consultas · vistas/conversión (cuando ML lo permita) · precio · tipo de vehículo · propio vs consignación · costos de tenencia | ✅ registrado — sin fórmula |
+| 5 | **PROPIO vs CONSIGNACIÓN no tienen el mismo riesgo.** Ambos tienen riesgo de **envejecimiento comercial**; solo PROPIO inmoviliza **capital de Luka/padre**. Principio de dominio | ✅ registrado (ver abajo) |
+| 6 | **KPI principal de Autos: no fijarlo todavía.** *Ganancia realizada* y *rotación* miden cosas distintas. Se define en Discovery | ✅ registrado |
+
+### Sobre la decisión 5 — por qué cambia el diseño, no solo la nomenclatura
+
+La app **ya separa** propio de consignación (`PROPIO = {en_stock, proximo_ingresar, senado}`,
+y `pct_ganancia_consignacion` como columna propia). Lo que la decisión agrega es que **son dos
+riesgos distintos, no dos filtros del mismo**:
+
+| | Envejecimiento comercial | Capital inmovilizado |
+|---|---|---|
+| **Propio** | ✅ | ✅ |
+| **Consignación** | ✅ | ❌ |
+
+Una unidad en consignación que no se vende **cuesta reputación, espacio y atención**, pero no
+cuesta plata de Luka. **Dos alertas distintas, no una con un filtro.**
+
+Y con la decisión 4, ninguna de las dos tiene todavía un umbral: **el dato existe
+(`fecha_ingreso`), el riesgo está nombrado, la política se deriva en Discovery.**
+
+---
+
 ## FUENTES
+
+**Tracing read-only (25/08):** `grep` de escritores y lectores sobre 51 scripts ·
+conteo JSON vs DB · `stat` de mtime · `build.ps1` · `COMO_USAR.md` · KE#55
 
 **Auditado read-only en esta sesión:** `C:\Users\lukam\MagnaOS-Familiar\magna-app`
 (Next.js + TypeScript + Supabase · 8 páginas de Autos · 2 dashboards · `costoAuto.ts` ·
