@@ -13,6 +13,7 @@
     "analizar": "node scripts/analizar.js",
     "match": "node scripts/match.js",
     "test": "node test/matcher.test.js && node test/vision.test.js",
-    "ingerir": "node scripts/ingerir_manual.js"
+    "ingerir": "node scripts/ingerir_manual.js",
+    "brief": "node scripts/brief.js"
   }
 }

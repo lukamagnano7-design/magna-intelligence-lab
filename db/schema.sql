@@ -64,6 +64,14 @@ CREATE TABLE IF NOT EXISTS sources (
   priority    INTEGER NOT NULL DEFAULT 5,
   active      INTEGER NOT NULL DEFAULT 1,
   metadata    TEXT NOT NULL DEFAULT '{}',
+  -- SALUD (LAB-BRIEF-001): la fuente del podcast estuvo 7 dias fallando en silencio y
+  -- nadie se entero hasta que Luka encontro el episodio a mano. Una fuente que falla
+  -- repetidamente ES informacion relevante y tiene que llegar al brief sola.
+  last_attempt  TEXT,
+  last_success  TEXT,
+  last_error    TEXT,
+  fallas_seguidas INTEGER NOT NULL DEFAULT 0,
+  items_ultima_corrida INTEGER,
   created_at  TEXT NOT NULL DEFAULT (datetime('now')),
   UNIQUE (platform, handle)
 );
@@ -82,6 +90,13 @@ CREATE TABLE IF NOT EXISTS items (
   fingerprint  TEXT UNIQUE,
   status       TEXT NOT NULL DEFAULT 'new'
                CHECK (status IN ('new','researching','researched','discarded')),
+  -- COBERTURA (LAB-INGEST-001): decir analizado cuando se vieron 48 de 376 segundos es
+  -- mentir por omision. El Reel B tenia 188 frames candidatos y se procesaron 24: el 13%.
+  -- Un veredicto sobre el 13% de una fuente no vale lo mismo que uno sobre el 100%, y el
+  -- brief tiene que poder decirlo.
+  coverage     TEXT CHECK (coverage IS NULL OR coverage IN ('COMPLETE','PARTIAL','NONE')),
+  coverage_pct REAL,
+  coverage_nota TEXT,
   created_at   TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
