@@ -179,6 +179,44 @@ Node en Windows tira `Assertion failed: UV_HANDLE_CLOSING` al cerrar el proceso 
 
 ---
 
+## 🔴 LO PRIMERO DE LA PRÓXIMA SESIÓN — pedido de Luka (26/08, tras probar el simulador)
+
+**Luka probó el simulador y anda bien.** Su observación: *"tendría que leer la factura y saber
+el total solo, en vez de que Freddy lo escriba. O preguntarle: el total es tanto, ¿sí o no?"*
+
+**Tiene razón, y la medición encontró un agujero.** Sobre un remito real con `WA_OCR=1`:
+
+```
+total    74400    confianza: MEDIUM
+candado  suma_items 74400 · base 74400 · dif 0  ✓
+         PERO apto_auto: FALSE — "Manuscrito -> revision manual"
+```
+
+`MEDIUM` **cuenta como suficiente** en `core.evaluar`, así que ese total **pasa sin
+confirmación** en un documento que el propio Freddy OS marcó como *"revisión manual"*.
+El sistema dice "revisá esto a mano" y después no lo pregunta.
+
+**Objeción a registrar:** Luka dijo *"con el OCR no le podés errar nunca"*. **Sí puede.**
+Los ítems pueden sumar exacto y estar los dos mal leídos. Precedentes propios: la factura
+#137 de Matiz descuadrada por $85.875, y el caso ICEFERAS al 10,5% cazado por $45.927.
+El candado sirve **porque no confía**.
+
+**Cambio a implementar:**
+
+| Situación | Comportamiento |
+|---|---|
+| OCR `HIGH` + `apto_auto: true` | no pregunta |
+| `MEDIUM`, manuscrito, o `apto_auto: false` | **`El total es $74.400 ¿está bien?` → [Sí] [No, lo escribo]** |
+| Candado no cuadra | pregunta siempre + avisa que los ítems no dan |
+
+Aplica igual a `fecha` (también salió `MEDIUM`). **El botón "No" no es opcional**: sin él no
+es confirmación, es trámite.
+
+Y: **`WA_OCR` pasa a prendido por defecto.**
+Costo medido: **USD 0,0328 por remito** (~USD 10/mes a 10 remitos/día). **Decisión de Luka.**
+
+---
+
 ## PRÓXIMOS PASOS — orden de construcción
 
 ```
